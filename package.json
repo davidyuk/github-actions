@@ -1,0 +1,12 @@
+{
+  "name": "github-actions test package",
+  "version": "1.0.0",
+  "description": "Github actions and workflows used by aeternity",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"All tests good\"",
+    "lint": "echo \"All lint good\""
+  },
+  "author": "",
+  "license": "ISC"
+}

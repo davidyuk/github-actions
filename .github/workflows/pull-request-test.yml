@@ -1,0 +1,48 @@
+name: "Pull Request"
+
+on:
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  validate:
+    uses: ./.github/workflows/_validate-npm.yml
+  publish:
+    uses: ./.github/workflows/_publish-docker.yml
+    needs: [ validate ]
+    secrets: inherit
+    with:
+      DOCKERHUB_REPO: aeternitybot/aepp-test
+  deploy:
+    uses: ./.github/workflows/_deploy-gitops.yml
+    needs: [publish]
+    secrets: inherit
+    with:
+      DEPLOY_ENV: dev
+      DEPLOY_APP: aepp-test
+      DEPLOY_VERSION: "pr-${{ github.event.number }}"
+      DEPLOY_HOST_PREFIX: "pr-${{ github.event.number }}"
+  wait:
+    runs-on: ubuntu-20.04
+    name: sleep
+    needs: [deploy]
+    steps:
+      - name: Sleep for 10 seconds
+        run: sleep 10s
+        shell: bash
+  rollback:
+    uses: ./.github/workflows/_rollback-gitops.yml
+    needs: [wait]
+    secrets: inherit
+    with:
+      DEPLOY_ENV: dev
+      DEPLOY_APP: aepp-test
+      DEPLOY_VERSION: "pr-${{ github.event.number }}"
+      DEPLOY_HOST_PREFIX: "pr-${{ github.event.number }}"
+  delete-tag:
+    uses: ./.github/workflows/_delete-tag-docker.yml
+    needs: [ wait ]
+    secrets: inherit
+    with:
+      DOCKERHUB_REPO: aeternitybot/aepp-test
+      DOCKERHUB_TAG: "pr-${{ github.event.number }}"

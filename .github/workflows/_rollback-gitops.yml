@@ -17,18 +17,14 @@ on:
         description: 'Application version'
         type: string
         required: false
-      DEPLOY_TAG:
-        description: 'Application tag'
-        type: string
-        required: false
       DEPLOY_HOST_PREFIX:
         description: 'Deployment hostname prefix, usually $VERSION-'
         type: string
         required: false
 
 jobs:
-  deploy:
-    name: "Deploy to Gitops"
+  rollback:
+    name: "Rollback from Gitops"
     runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v3
@@ -55,16 +51,8 @@ jobs:
           APP_VERSION_SHA_LONG: ${{ github.sha }}
         run: |
           export APP_VERSION_SHA=${APP_VERSION_SHA_LONG:0:7}
-          ./scripts/app.sh update-version ${{ inputs.DEPLOY_APP }}
-
-      - name: Update application tag in Gitops repository
-        if: ${{ inputs.DEPLOY_TAG != '' }}
-        shell: bash
-        env:
-          APP_ENV: ${{ inputs.DEPLOY_ENV }}
-          APP_VERSION: ${{ inputs.DEPLOY_TAG }}
-        run: |
-          ./scripts/app.sh update-tag ${{ inputs.DEPLOY_APP }}
+          ./scripts/app.sh delete-version ${{ inputs.DEPLOY_APP }}
+          ./scripts/app.sh delete-host ${{ inputs.DEPLOY_APP }}
 
       - name: Commit Gitops changes
         shell: bash
@@ -72,7 +60,7 @@ jobs:
           APP_VERSION: ${{ inputs.DEPLOY_TAG || inputs.DEPLOY_VERSION }}
         run: |
           git add .
-          git commit -m "Deploy ${{ inputs.DEPLOY_APP }} to ${{ inputs.DEPLOY_ENV }} - ${APP_VERSION} (sha: ${{ github.sha }})"
+          git commit -m "Rollback ${{ inputs.DEPLOY_APP }} from ${{ inputs.DEPLOY_ENV }} - ${APP_VERSION}"
 
       - name: Push changes
         uses: ad-m/github-push-action@master

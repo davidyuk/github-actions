@@ -1,0 +1,37 @@
+on:
+  workflow_call:
+    inputs:
+      DOCKERHUB_REPO:
+        description: 'Dockerhub repository'
+        type: string
+        default: "${{ github.repository }}"
+      DOCKERHUB_TAG:
+        description: 'Docker image tag'
+        type: string
+        required: true
+    secrets:
+      DOCKERHUB_USER:
+        required: true
+      DOCKERHUB_PASS:
+        required: true
+
+jobs:
+  delete_tag:
+    name: "Delete docker tag"
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Authenticate
+        id: auth
+        run: |
+          TOKEN=$(curl -s -d "username=$USER&password=$PASS" https://hub.docker.com/v2/users/login/ | jq -r .token)
+          echo "token=$TOKEN" >> $GITHUB_OUTPUT
+        env:
+          USER: ${{ secrets.DOCKERHUB_USER }}
+          PASS: ${{ secrets.DOCKERHUB_PASS }}
+      - name: Delete tag
+        run: |
+          curl -i -X DELETE -H "Authorization: JWT $HUB_TOKEN" https://hub.docker.com/v2/repositories/$REPO/tags/$TAG
+        env:
+          HUB_TOKEN: ${{ steps.auth.outputs.token }}
+          REPO: ${{ inputs.DOCKERHUB_REPO }}
+          TAG: ${{ inputs.DOCKERHUB_TAG }}
