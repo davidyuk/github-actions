@@ -21,6 +21,10 @@ on:
         description: 'Deployment hostname prefix, usually $VERSION-'
         type: string
         required: false
+      DEPLOY_HOST:
+        description: 'Deployment host'
+        type: string
+        default: 'aepps.com'
 
 jobs:
   rollback:
@@ -48,6 +52,7 @@ jobs:
           APP_ENV: ${{ inputs.DEPLOY_ENV }}
           APP_VERSION: ${{ inputs.DEPLOY_VERSION }}
           APP_HOST_PREFIX: ${{ inputs.DEPLOY_HOST_PREFIX }}
+          APP_DOMAIN: ${{ inputs.DEPLOY_HOST }}
           APP_VERSION_SHA_LONG: ${{ github.sha }}
         run: |
           export APP_VERSION_SHA=${APP_VERSION_SHA_LONG:0:7}
