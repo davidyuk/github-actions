@@ -17,6 +17,9 @@ jobs:
     uses: ./.github/workflows/_deploy-gitops.yml
     needs: [publish]
     secrets: inherit
+    environment:
+      name: dev
+      url: "https://pr-${{ github.event.number }}-aepp-test.dev.aepps.com"
     with:
       DEPLOY_ENV: dev
       DEPLOY_APP: aepp-test
