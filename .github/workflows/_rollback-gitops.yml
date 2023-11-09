@@ -52,7 +52,7 @@ jobs:
         run: |
           export APP_VERSION_SHA=${APP_VERSION_SHA_LONG:0:7}
           ./scripts/app.sh delete-version ${{ inputs.DEPLOY_APP }}
-          ./scripts/app.sh delete-host ${{ inputs.DEPLOY_HOST_PREFIX }}
+          ./scripts/app.sh delete-host ${{ inputs.DEPLOY_APP }}
 
       - name: Commit Gitops changes
         shell: bash
