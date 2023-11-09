@@ -25,11 +25,18 @@ on:
         description: 'Deployment hostname prefix, usually $VERSION-'
         type: string
         required: false
+      DEPLOY_HOST:
+        description: 'Deployment host domain name.'
+        type: string
+        default: 'aepps.com'
 
 jobs:
   deploy:
     name: "Deploy to Gitops"
     runs-on: ubuntu-20.04
+    environment:
+      name: ${{ inputs.DEPLOY_ENV }}
+      url: "https://${{ inputs.DEPLOY_HOST_PREFIX }}${{ inputs.DEPLOY_APP}}.${{ inputs.DEPLOY_ENV }}.${{ inputs.DEPLOY_HOST }}"
     steps:
       - uses: actions/checkout@v3
         with:
