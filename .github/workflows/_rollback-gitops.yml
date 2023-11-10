@@ -18,7 +18,7 @@ on:
         type: string
         required: false
       DEPLOY_HOST_PREFIX:
-        description: 'Deployment hostname prefix, usually $VERSION-'
+        description: 'Deployment hostname prefix. Usually $VERSION-'
         type: string
         required: false
       DEPLOY_HOST:
@@ -51,7 +51,7 @@ jobs:
         env:
           APP_ENV: ${{ inputs.DEPLOY_ENV }}
           APP_VERSION: ${{ inputs.DEPLOY_VERSION }}
-          APP_HOST_PREFIX: ${{ inputs.DEPLOY_HOST_PREFIX || format('{0}-', inputs.DEPLOY_VERSION) }}
+          APP_HOST_PREFIX: ${{ inputs.DEPLOY_HOST_PREFIX }}
           APP_DOMAIN: ${{ inputs.DEPLOY_HOST }}
           APP_VERSION_SHA_LONG: ${{ github.sha }}
         run: |

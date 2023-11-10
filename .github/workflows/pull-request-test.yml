@@ -21,6 +21,7 @@ jobs:
       DEPLOY_ENV: dev
       DEPLOY_APP: aepp-test
       DEPLOY_VERSION: "pr-${{ github.event.number }}"
+      DEPLOY_HOST_PREFIX: "pr-${{ github.event.number }}-"
   wait:
     runs-on: ubuntu-20.04
     name: sleep
@@ -37,6 +38,7 @@ jobs:
       DEPLOY_ENV: dev
       DEPLOY_APP: aepp-test
       DEPLOY_VERSION: "pr-${{ github.event.number }}"
+      DEPLOY_HOST_PREFIX: "pr-${{ github.event.number }}-"
   delete-tag:
     uses: ./.github/workflows/_delete-tag-docker.yml
     needs: [ wait ]
