@@ -4,8 +4,9 @@
   "description": "Github actions and workflows used by aeternity",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"All tests good\"",
-    "lint": "echo \"All lint good\""
+    "lint": "echo \"All lint good\"",
+    "build": "echo \"Built good\"",
+    "test": "echo \"All tests good\""
   },
   "author": "",
   "license": "ISC"
