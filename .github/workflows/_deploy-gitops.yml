@@ -30,6 +30,8 @@ on:
         type: string
         default: 'aepps.com'
 
+concurrency: "${{ github.workflow }}-${{ inputs.DEPLOY_ENV }}"
+
 jobs:
   deploy:
     name: "Deploy to Gitops"
