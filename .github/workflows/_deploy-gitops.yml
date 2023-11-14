@@ -21,8 +21,8 @@ on:
         description: 'Application tag'
         type: string
         required: false
-      DEPLOY_HOST_PREFIX:
-        description: 'Deployment hostname prefix. Usually $VERSION-'
+      DEPLOY_SUBDOMAIN:
+        description: 'Deployment subdomain. Defaults to $DEPLOY_APP'
         type: string
         required: false
       DEPLOY_HOST:
@@ -38,7 +38,7 @@ jobs:
     runs-on: ubuntu-20.04
     environment:
       name: ${{ inputs.DEPLOY_ENV }}
-      url: "https://${{ inputs.DEPLOY_HOST_PREFIX }}${{ inputs.DEPLOY_APP}}.${{ inputs.DEPLOY_ENV }}.${{ inputs.DEPLOY_HOST }}"
+      url: "https://${{ inputs.DEPLOY_SUBDOMAIN || inputs.DEPLOY_APP }}.${{ inputs.DEPLOY_ENV }}.${{ inputs.DEPLOY_HOST }}"
     steps:
       - uses: actions/checkout@v3
         with:
@@ -60,7 +60,8 @@ jobs:
         env:
           APP_ENV: ${{ inputs.DEPLOY_ENV }}
           APP_VERSION: ${{ inputs.DEPLOY_VERSION }}
-          APP_HOST_PREFIX: ${{ inputs.DEPLOY_HOST_PREFIX }}
+          APP_HOST_PREFIX: ""
+          APP_SUBDOMAIN: ${{ inputs.DEPLOY_SUBDOMAIN || inputs.DEPLOY_APP }}
           APP_DOMAIN: ${{ inputs.DEPLOY_HOST }}
           APP_VERSION_SHA_LONG: ${{ github.sha }}
         run: |
