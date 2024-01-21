@@ -22,7 +22,7 @@ on:
 
 jobs:
   dockerhub:
-    name: "Publish to Dockehub"
+    name: "Publish to Dockerhub"
     runs-on: ubuntu-20.04
     steps:
       - name: Docker meta
